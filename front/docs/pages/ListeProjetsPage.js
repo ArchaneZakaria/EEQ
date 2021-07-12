@@ -506,9 +506,12 @@ const data = () => ({
 });
 
 const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
+    { value: 'biologie', label: 'biologie' },
+    { value: 'hématologie', label: 'hématologie' },
+    { value: 'immunologie', label: 'immunologie' },
+    { value: 'virologie', label: 'virologie' },
+    { value: 'bactériologie', label: 'bactériologie' },
+    { value: 'parasitologie', label: 'parasitologie' },
   ];
 
 const ListeProjetsPage = () => {
@@ -545,7 +548,7 @@ const ListeProjetsPage = () => {
             </label>
             <textarea type='text' id='defaultFormContactMessageEx' className='form-control' rows='3' />
             <label htmlFor='defaultFormContactNameEx' className='grey-text'>
-              Intitulé
+              Année
             </label>
             <input type='text' id='defaultFormContactNameEx' className='form-control' />
             <br />
@@ -553,25 +556,17 @@ const ListeProjetsPage = () => {
               Disciplines
             </label>
             {/*
+            
+            */}
             <Select
             isMulti={true}
         options={options}
+        placeholder={"Veuillez saisir les disciplines"}
       />
-            */}
             
-            <MDBInput
-              label='Type your email'
-              icon='envelope'
-              group
-              type='email'
-              validate
-              error='wrong'
-              success='right'
-            />
-            <MDBInput label='Type your password' icon='lock' group type='password' validate />
           </div>
           <div className='text-center'>
-            <MDBBtn>Login</MDBBtn>
+            <MDBBtn>Créer</MDBBtn>
           </div>
         </form>
       </SectionContainer>
