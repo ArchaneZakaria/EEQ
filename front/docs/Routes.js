@@ -8,6 +8,7 @@ import AddonsNavPage from './pages/AddonsNavPage';
 import ModalsNavPage from './pages/ModalsNavPage';
 import AdvancedNavPage from './pages/AdvancedNavPage';
 import ComponentsNavPage from './pages/ComponentsNavPage';
+import ProjetsNavPage from './pages/ProjetsNavPage';
 
 // FREE
 import AnimationPage from './pages/AnimationPage';
@@ -61,6 +62,7 @@ import NotificationPage from './pages/NotificationPage';
 import InputGroupPage from './pages/InputGroupPage';
 import TreeviewPage from './pages/TreeviewPage';
 import RatingPage from './pages/RatingPage';
+import ListeProjetsPage from './pages/ListeProjetsPage'
 
 
 
@@ -69,6 +71,7 @@ class Routes extends React.Component {
     return (
       <Switch>
         <Route exact path='/' component={HomePage} />
+        <Route exact path='/projets' component={ProjetsNavPage} />
         <Route exact path='/addons' component={AddonsNavPage} />
         <Route exact path='/advanced' component={AdvancedNavPage} />
         <Route exact path='/components' component={ComponentsNavPage} />
@@ -129,7 +132,7 @@ class Routes extends React.Component {
         <Route path='/tables/table-styles' component={TableStylesPage} />
         <Route path='/tables/datatable-api' component={DatatableApiPage} />
         <Route path='/tables/datatable' component={DatatablePage} />
-
+        <Route path='/projets/liste-projets' component={ListeProjetsPage} />
         
         <Route
           render={function() {
