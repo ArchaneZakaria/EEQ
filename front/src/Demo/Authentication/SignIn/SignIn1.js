@@ -1,51 +1,131 @@
-import React from 'react';
-import {NavLink} from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
 
-import './../../../assets/scss/style.scss';
+import "./../../../assets/scss/style.scss";
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
+import logo from "../../../assets/images/INH.png";
+import axios from "axios";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { Form } from "react-bootstrap";
+import Swal from 'sweetalert2'
 
-class SignUp1 extends React.Component {
-    render () {
-        return(
-            <Aux>
-                <Breadcrumb/>
-                <div className="auth-wrapper">
-                    <div className="auth-content">
-                        <div className="auth-bg">
-                            <span className="r"/>
-                            <span className="r s"/>
-                            <span className="r s"/>
-                            <span className="r"/>
-                        </div>
-                        <div className="card">
-                            <div className="card-body text-center">
-                                <div className="mb-4">
-                                    <i className="feather icon-unlock auth-icon"/>
-                                </div>
-                                <h3 className="mb-4">Login</h3>
-                                <div className="input-group mb-3">
-                                    <input type="email" className="form-control" placeholder="Email"/>
-                                </div>
-                                <div className="input-group mb-4">
-                                    <input type="password" className="form-control" placeholder="password"/>
-                                </div>
-                                <div className="form-group text-left">
-                                    <div className="checkbox checkbox-fill d-inline">
-                                        <input type="checkbox" name="checkbox-fill-1" id="checkbox-fill-a1" />
-                                            <label htmlFor="checkbox-fill-a1" className="cr"> Save credentials</label>
-                                    </div>
-                                </div>
-                                <button className="btn btn-primary shadow-2 mb-4">Login</button>
-                                <p className="mb-2 text-muted">Forgot password? <NavLink to="/auth/reset-password-1">Reset</NavLink></p>
-                                <p className="mb-0 text-muted">Don’t have an account? <NavLink to="/auth/signup-1">Signup</NavLink></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </Aux>
-        );
+const SignUp1 = (props) => {
+
+    const schema = yup.object().shape({
+        email: yup
+          .string()
+          .trim()
+          .required("l'email est obligatoire."),
+        password: yup
+          .string()
+          .required("Le mot de passe est obligatoire.")
+      });
+
+
+      const { register, handleSubmit, errors, formState, reset } = useForm({
+        resolver: yupResolver(schema),
+      });
+    
+      const errorMessage = (error) => {
+        return <Form.Text className="text-danger mb-1" color="danger" style={{color:"red"}}>{error}</Form.Text>;
+      };
+  const init = (data) => {
+    
+    axios.get("http://localhost:8000/sanctum/csrf-cookie").then((response) => {
+      axios.post("http://localhost:8000/api/login",data).then((res) => {
+        if(res["data"]["status"] === "error")
+      {
+        Swal.fire({
+          title: 'Echec',
+          text:   "Connexion échoué",
+          type: 'warning',
+        
+      });
+      }
+      else
+      {
+        Swal.fire({
+        title: 'Succés',
+        text:   "Connexion réussi",
+        type: 'success',
+        });
     }
-}
+      });
+
+      console.log(response);
+    });
+  };
+
+  return (
+    <Aux>
+      <Breadcrumb />
+      <div className="auth-wrapper">
+        <div className="auth-content">
+          <div className="auth-bg">
+            <span className="r" />
+            <span className="r s" />
+            <span className="r s" />
+            <span className="r" />
+          </div>
+          <div className="card">
+            <div className="card-body text-center">
+              <div className="mb-4">
+                <img
+                  src={logo}
+                  alt="logo"
+                  style={{ width: "50%", height: "50%" }}
+                />
+                <br />
+                Evaluation externe de qualité
+              </div>
+              <h3 className="mb-4">Connectez vous</h3>
+              <Form onSubmit={handleSubmit(init)}>
+              <div className="input-group mb-3">
+                <input
+                  type="email"
+                  className="form-control"
+                  placeholder="Email"
+                  {...register("email")}
+                />
+              </div>
+              {formState.errors.email &&
+                    errorMessage(formState.errors.email.message)}
+              <div className="input-group mb-4">
+                <input
+                  type="password"
+                  className="form-control"
+                  placeholder="Mot de passe"
+                  {...register("password")}
+                />
+              </div>
+              {formState.errors.password &&
+                    errorMessage(formState.errors.password.message)}
+
+              <button
+                className="btn btn-primary shadow-2 mb-4"
+                type="submit"
+              >
+                Se connecter
+              </button>
+              </Form>
+              <p className="mb-2 text-muted">
+                {" "}
+                <NavLink to="/auth/reset-password-1">
+                  Mot de passe oublié
+                </NavLink>
+              </p>
+              <p className="mb-0 text-muted">
+                <NavLink to="/auth/signup-1">Inscription</NavLink>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Aux>
+  );
+};
 
 export default SignUp1;

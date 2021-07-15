@@ -1,6 +1,7 @@
 /**  =====================
       Authentication css start
 ==========================  **/
+
 .auth-wrapper {
     position: relative;
     display: flex;
@@ -37,10 +38,10 @@
     > div {
         z-index: 5;
     }
-
+    
     .auth-content {
         position: relative;
-        width: 390px;
+        width: 490px;
         padding: 15px;
         z-index: 5;
         &.multyform,

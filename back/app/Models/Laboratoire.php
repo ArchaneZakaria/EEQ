@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Laboratoire extends Model
 {
+    
+
+    public function user()
+    {
+        return $this->hasOne('App\User');
+    }
     use HasFactory;
     protected $table='Laboratoire';
     const CREATED_AT = 'Cdate_Laboratoire';
@@ -19,6 +25,7 @@ class Laboratoire extends Model
         'Email_Laboratoire',
         'Adresse_Laboratoire',
         'Discipline_Laboratoire',
+        'User_Laboratoire',
         'Code_Acces_Laboratoire',
         'Cdate_Laboratoire',
         'Cby_Laboratoire',

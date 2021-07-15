@@ -1,10 +1,14 @@
 import React from 'react';
 import $ from 'jquery';
+import axios from "axios";
 
 window.jQuery = $;
 window.$ = $;
 global.jQuery = $;
-
+axios.defaults.headers = {
+    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+  };
+  
 const DashboardDefault = React.lazy(() => import('./Demo/Dashboard/Default'));
 
 const UIBasicButton = React.lazy(() => import('./Demo/UIElements/Basic/Button'));

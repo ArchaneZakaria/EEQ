@@ -48,7 +48,7 @@ class FormsElements extends React.Component {
                                         </Form.Group>
                                         <Form.Group controlId="exampleForm.ControlSelect1">
                                             <Form.Label>Example select</Form.Label>
-                                            <Form.Control as="select">
+                                            <Form.Control as="select" multiple>
                                                 <option>1</option>
                                                 <option>2</option>
                                                 <option>3</option>
