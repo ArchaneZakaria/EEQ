@@ -28,17 +28,17 @@ function getDatum() {
     return [
         {
             values: sin,
-            key: 'Stream #0',
+            key: 'Labo 2',
             color: '#A389D4'
         },
         {
             values: sin3,
-            key: 'Stream #1',
+            key: 'Labo 1',
             color: '#04a9f5'
         },
         {
             values: sin2,
-            key: 'Stream #3',
+            key: 'Labo 3',
             color: '#1de9b6',
             area: true
         }
@@ -49,7 +49,7 @@ class MultiBarChart extends React.Component {
 
     render() {
         const data = getDatum();
-        return <NVD3Chart type="multiBarChart" datum={data} x="x" y="y" height={300} showValues groupSpacing={0.2} />
+        return <NVD3Chart type="multiBarChart" datum={data} x="x" y="y" height={300} showValues groupSpacing={0.3} />
     }
 }
 
