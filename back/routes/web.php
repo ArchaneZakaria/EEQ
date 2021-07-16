@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Controllers\LoginController;
+use App\Mail\AccueilMail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +21,9 @@ Route::get('/', function () {
 });
 
 Route::post('/login',[LoginController::class,'authenticate']);
+
+
+Route::get('/email', function () {
+    Mail::to("zakariaarchane06@gmail.com")->send(new AccueilMail());
+    return new AccueilMail();
+});

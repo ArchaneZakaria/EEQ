@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AccueilMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Laboratoire;
 use App\Models\Discipline_Has_Laboratoire;
+use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
 {
@@ -37,7 +39,7 @@ class LoginController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);*/
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password,'actif'=>1])){ 
             $user = Auth::user(); 
           //Setting login response 
           $success['token'] = $this->apiToken;
@@ -65,7 +67,8 @@ class LoginController extends Controller
         $user = User::create([
             'name' => $fields['name'],
             'email' => $fields['email'],
-            'password' => bcrypt($fields['password'])
+            'password' => bcrypt($fields['password']),
+            'actif'=>0
         ]);
         $laboratoire=Laboratoire::create([
             'Nom_Laboratoire'=>$fields['name'],
@@ -84,7 +87,7 @@ class LoginController extends Controller
         
 
         $token = $user->createToken('myapptoken')->plainTextToken;
-
+        Mail::to($fields['email'])->send(new AccueilMail($request->responsable_laboratoire));
         $response = [
             'user' => $user,
             'token' => $token,

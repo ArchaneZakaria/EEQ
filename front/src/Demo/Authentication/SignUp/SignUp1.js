@@ -13,53 +13,66 @@ import { useForm, Controller } from "react-hook-form";
 import { Form, Jumbotron } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-import AsyncSelect from 'react-select/async';
+import AsyncSelect from "react-select/async";
+import Condition from "yup/lib/Condition";
 
 const SignUp1 = (props) => {
-    {/***/}
-    let options = [
-        { value: "biologie", label: "biologie" },
-        { value: "bactérologie", label: "bactérologie" },
-        { value: "virologie", label: "virologie" },
-      ]; 
-const[optionss,setOptions]=React.useState([
+  {
+    /***/
+  }
+  let options = [
+    { value: "biologie", label: "biologie" },
+    { value: "bactérologie", label: "bactérologie" },
+    { value: "virologie", label: "virologie" },
+  ];
+  const [optionss, setOptions] = React.useState([
     { value: "biologie", label: "biologie" },
     { value: "bactérologie", label: "bactérologie" },
     { value: "virologie", label: "virologie" },
   ]);
 
-let options1;
-    useEffect((options1)=>{
-        console.log(optionss);
-},[optionss])  
-useEffect((options1)=>{
+  let options1;
+  useEffect(
+    (options1) => {
+      console.log(optionss);
+    },
+    [optionss]
+  );
+  useEffect((options1) => {
     fetchOptions();
-},[])    
-function fetchOptions(input){
+  }, []);
+  function fetchOptions(input) {
     //alert("jdjjfjdf")
-    axios.get("http://localhost:8000/api/getDisciplines").then((res)=>{
-            
-        let options1=res.data.map(function(val){
-            return { value: val.Id_Discipline, label: val.Libelle_Discipline };
-            
-        })
-        //alert(JSON.stringify(options1))
-        setOptions([options1][0])
-        return options1;
-        
-        
-    })
-}
+    axios.get("http://localhost:8000/api/getDisciplines").then((res) => {
+      let options1 = res.data.map(function (val) {
+        return { value: val.Id_Discipline, label: val.Libelle_Discipline };
+      });
+      //alert(JSON.stringify(options1))
+      setOptions([options1][0]);
+      return options1;
+    });
+  }
 
-//alert(JSON.stringify(options1));
+  //alert(JSON.stringify(options1));
 
   const schema = yup.object().shape({
-    name: yup.string().trim().required("Le nom est obligatoire."),
+    name: yup
+      .string()
+      .trim()
+      .required("Le nom du laboratoire est obligatoire."),
     email: yup.string().trim().required("l'email est obligatoire."),
-    password: yup.string().required("Le mot de passe est obligatoire."),
+    password: yup
+      .string()
+      .trim()
+      .max(15)
+      .required("Le mot de passe est obligatoire")
+      .min(4, "Le mot de passe doit contenir au moins 4 caractéres"),
     password_confirmation: yup
       .string()
-      .required("La confirmation est obligatoire."),
+      .oneOf(
+        [yup.ref("password"), null],
+        "Les mots de passe ne correspondent pas !"
+      ),
     responsable_laboratoire: yup
       .string()
       .required("Le nom du responsable est obligatoire."),
@@ -68,6 +81,7 @@ function fetchOptions(input){
       .string()
       .required("Le numéro de téléphone est obligatoire."),
     disciplines: yup.mixed().required("Les disciplines sont obligatoires."),
+    files: yup.mixed(),
   });
 
   const { register, handleSubmit, errors, formState, reset, control } = useForm(
@@ -88,11 +102,30 @@ function fetchOptions(input){
     );
   };
 
-  const onSubmit = (data) => {
-   
-    alert(JSON.stringify(data));
+  const [selectedFile, setSelectedFile] = React.useState();
 
-    axios.post("http://localhost:8000/api/register", data).then((res) => {
+  const [isFilePicked, setIsFilePicked] = React.useState(false);
+
+  const changeHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
+
+    setIsFilePicked(true);
+  };
+
+  const onSubmit = (data) => {
+    console.log(data.files[0].File);
+    const formData = new FormData();
+    formData.append('File', selectedFile);
+    console.log(formData.File);
+    axios
+      .post("http://localhost:8000/api/file/PostPiecesjointes", 
+        data.files[0].File 
+      )
+      .then((res) => {
+        console.log(res);
+      });
+    /*
+axios.post("http://localhost:8000/api/register", data).then((res) => {
       console.log(res);
       if (res.status === 201) {
         Swal.fire({
@@ -100,6 +133,7 @@ function fetchOptions(input){
           text: "Inscription avec succés, on vous contactera par mail.",
           type: "success",
         });
+        ///reset({name:"ffff"});
       } else {
         Swal.fire({
           title: "Echec",
@@ -108,9 +142,9 @@ function fetchOptions(input){
         });
       }
     });
+ */
   };
 
-  
   return (
     <Aux>
       <Breadcrumb />
@@ -143,6 +177,7 @@ function fetchOptions(input){
                     {...register("name")}
                   />
                 </div>
+                
                 {formState.errors.name &&
                   errorMessage(formState.errors.name.message)}
                 <div className="input-group mb-3">
@@ -167,14 +202,15 @@ function fetchOptions(input){
                 </div>
                 {formState.errors.adresse_laboratoire &&
                   errorMessage(formState.errors.adresse_laboratoire.message)}
-                
-                <div >
-                      <Controller className="input-group mb-4"
+
+                <div>
+                  <Controller
+                    className="input-group mb-4"
                     control={control}
                     defaultValue=" "
                     name="disciplines"
                     render={({ field: { onChange, value, ref } }) => (
-                        <AsyncSelect
+                      <AsyncSelect
                         id="select-disciplines"
                         inputRef={ref}
                         value={optionss.filter((c) => value.includes(c.value))}
@@ -182,23 +218,20 @@ function fetchOptions(input){
                         //loadOptions={fetchOptions()} // function that executes HTTP request and returns array of options
                         isMulti
                         placeholder={"Disciplines"}
-                        
                         defaultOptions={optionss} // load on render
                         // defaultOptions={[id: 0, label: "Loading..."]} // uncomment this and comment out the line above to load on input change
-                      /> 
-
-
-                      
+                      />
                     )}
                   />
-
-                </div><br/>
+                </div>
+                <br />
 
                 {formState.errors.disciplines &&
                   errorMessage(formState.errors.disciplines.message)}
+
                 <div className="input-group mb-3">
                   <input
-                    type="number"
+                    type="tel"
                     className="form-control"
                     placeholder="Numero de téléphone"
                     {...register("num_tel_laboratoire")}
@@ -236,6 +269,17 @@ function fetchOptions(input){
                 </div>
                 {formState.errors.password_confirmation &&
                   errorMessage(formState.errors.password_confirmation.message)}
+
+                <div className="input-group mb-3">
+                  <input
+                    type="file"
+                    multiple
+                    name="file"
+                    {...register("files")}
+                    onChange={changeHandler}
+                  />
+                  {/* <Form.Control type="file" multiple name="files"  />*/}
+                </div>
                 <button className="btn btn-primary shadow-2 mb-4" type="submit">
                   Inscription
                 </button>

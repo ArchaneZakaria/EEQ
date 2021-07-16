@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\API\LaboratoireController;
+use App\Http\Controllers\FileUploadConroller;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,5 +35,7 @@ Route::post('/addProjet',[ProjetController::class,'store']);
 Route::get('/getProjets',[ProjetController::class,'index']);
 
 Route::get('/getDisciplines',[DisciplineController::class,'index']);
+Route::get('file/piecesjointes',[FileUploadConroller::class,'getpiecesjointes']);
+Route::post('file/PostPiecesjointes',[FileUploadConroller::class,'postpiecesjointes']);
 
 //Route::apiResource('projet','ProjetController');
