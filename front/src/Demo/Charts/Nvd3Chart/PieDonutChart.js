@@ -3,7 +3,7 @@ import NVD3Chart from 'react-nvd3';
 
 const datum = [
     {key: "One", y: 29, color: "#ff8a65"},
-    {key: "Two", y: 0, color: "#f4c22b"},
+    {key: "Two", y: 25, color: "#f4c22b"},
     {key: "Three", y: 32, color: "#04a9f5"},
     {key: "Four", y: 196, color: "#3ebfea"},
     {key: "Five", y: 2, color: "#4F5467"},
