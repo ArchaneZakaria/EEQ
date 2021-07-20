@@ -4,17 +4,13 @@ import { NavLink } from "react-router-dom";
 import "./../../../assets/scss/style.scss";
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
-import DEMO from "../../../store/constant";
 import logo from "../../../assets/images/INH.png";
-import Select from "react-select";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useForm, Controller } from "react-hook-form";
-import { Form, Jumbotron } from "react-bootstrap";
+import { useForm  } from "react-hook-form";
+import { Form,  InputGroup } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
-import AsyncSelect from "react-select/async";
-import Condition from "yup/lib/Condition";
 
 const SignUp1 = (props) => {
   {
@@ -79,9 +75,7 @@ const SignUp1 = (props) => {
     adresse_laboratoire: yup.string().required("L'adresse est obligatoire."),
     num_tel_laboratoire: yup
       .string()
-      .required("Le numéro de téléphone est obligatoire."),
-    disciplines: yup.mixed().required("Les disciplines sont obligatoires."),
-    files: yup.mixed(),
+      .required("Le numéro de téléphone est obligatoire.")
   });
 
   const { register, handleSubmit, errors, formState, reset, control } = useForm(
@@ -102,30 +96,18 @@ const SignUp1 = (props) => {
     );
   };
 
-  const [selectedFile, setSelectedFile] = React.useState();
+  const [image, setImage] = React.useState();
 
-  const [isFilePicked, setIsFilePicked] = React.useState(false);
-
-  const changeHandler = (event) => {
-    setSelectedFile(event.target.files[0]);
-
-    setIsFilePicked(true);
+  const handleChange = (e) => {
+    e.preventDefault();
+    setImage(e.target.files[0]);
   };
 
   const onSubmit = (data) => {
-    console.log(data.files[0].File);
-    const formData = new FormData();
-    formData.append('File', selectedFile);
-    console.log(formData.File);
-    axios
-      .post("http://localhost:8000/api/file/PostPiecesjointes", 
-        data.files[0].File 
-      )
-      .then((res) => {
-        console.log(res);
-      });
-    /*
-axios.post("http://localhost:8000/api/register", data).then((res) => {
+    alert('dsdhsdd');
+    console.log(data);
+
+    axios.post("http://localhost:8000/api/register", data).then((res) => {
       console.log(res);
       if (res.status === 201) {
         Swal.fire({
@@ -133,7 +115,7 @@ axios.post("http://localhost:8000/api/register", data).then((res) => {
           text: "Inscription avec succés, on vous contactera par mail.",
           type: "success",
         });
-        ///reset({name:"ffff"});
+        reset();
       } else {
         Swal.fire({
           title: "Echec",
@@ -142,9 +124,22 @@ axios.post("http://localhost:8000/api/register", data).then((res) => {
         });
       }
     });
- */
-  };
 
+    
+  };
+/*
+    console.log(image);
+    const data1 = new FormData();
+    data1.append("images", image);
+
+    console.log(data1);
+    axios
+      .post("http://localhost:8000/api/file/PostPiecesjointes", 
+        data1
+      )
+      .then((res) => {
+        console.log(res);
+      }); */
   return (
     <Aux>
       <Breadcrumb />
@@ -169,42 +164,58 @@ axios.post("http://localhost:8000/api/register", data).then((res) => {
               </div>
               <h3 className="mb-4">Inscription</h3>
               <Form onSubmit={handleSubmit(onSubmit)}>
-                <div className="input-group mb-3">
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Nom du laboratoire&nbsp;&nbsp;&nbsp;
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Nom du laboratoire"
+                    placeholder=""
                     {...register("name")}
                   />
-                </div>
-                
+                </InputGroup>
+
                 {formState.errors.name &&
                   errorMessage(formState.errors.name.message)}
-                <div className="input-group mb-3">
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Nom du responsable&nbsp;&nbsp;
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Nom du responsable"
+                    placeholder=""
                     {...register("responsable_laboratoire")}
                   />
-                </div>
+                </InputGroup>
+
                 {formState.errors.responsable_laboratoire &&
                   errorMessage(
                     formState.errors.responsable_laboratoire.message
                   )}
-                <div className="input-group mb-3">
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Adresse du laboratoire
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Adresse du laboratoire"
+                    placeholder=""
                     {...register("adresse_laboratoire")}
                   />
-                </div>
+                </InputGroup>
                 {formState.errors.adresse_laboratoire &&
                   errorMessage(formState.errors.adresse_laboratoire.message)}
 
-                <div>
-                  <Controller
+                {/* <div>
+                      <Controller
                     className="input-group mb-4"
                     control={control}
                     defaultValue=" "
@@ -222,62 +233,95 @@ axios.post("http://localhost:8000/api/register", data).then((res) => {
                         // defaultOptions={[id: 0, label: "Loading..."]} // uncomment this and comment out the line above to load on input change
                       />
                     )}
-                  />
-                </div>
-                <br />
+                  />    
+                  </div>     
+                <br />         
+                  */}
 
-                {formState.errors.disciplines &&
-                  errorMessage(formState.errors.disciplines.message)}
-
-                <div className="input-group mb-3">
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Numero de téléphone
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
-                    type="tel"
+                    type="text"
                     className="form-control"
-                    placeholder="Numero de téléphone"
+                    placeholder=""
                     {...register("num_tel_laboratoire")}
                   />
-                </div>
+                </InputGroup>
+
                 {formState.errors.num_tel_laboratoire &&
                   errorMessage(formState.errors.num_tel_laboratoire.message)}
-                <div className="input-group mb-3">
+
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Email
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
-                    type="email"
+                    type="text"
                     className="form-control"
-                    placeholder="Email"
+                    placeholder=""
                     {...register("email")}
                   />
-                </div>
+                </InputGroup>
+
                 {formState.errors.email &&
                   errorMessage(formState.errors.email.message)}
-                <div className="input-group mb-4">
+
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Mot de passe
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="Mot de passe"
+                    placeholder=""
                     {...register("password")}
                   />
-                </div>
+                </InputGroup>
+
                 {formState.errors.password &&
                   errorMessage(formState.errors.password.message)}
-                <div className="input-group mb-4">
+
+                <InputGroup className="mb-3">
+                  <InputGroup.Prepend>
+                    <InputGroup.Text id="basic-addon1" className="desc">
+                      Confirmer mot de passe
+                    </InputGroup.Text>
+                  </InputGroup.Prepend>
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="Confirmer le mot de passe"
+                    placeholder=""
                     {...register("password_confirmation")}
                   />
-                </div>
+                </InputGroup>
                 {formState.errors.password_confirmation &&
                   errorMessage(formState.errors.password_confirmation.message)}
 
                 <div className="input-group mb-3">
+                  <Form.Check
+                    custom
+                    type="checkbox"
+                    id="checkbox1"
+                    label="En cochant cette case, vous confirmez que vous avez lu et accepté les conditions générales d'utilisation."
+                  />
+                  {/*
                   <input
                     type="file"
                     multiple
                     name="file"
                     {...register("files")}
-                    onChange={changeHandler}
+                    onChange={handleChange}
                   />
+                   */}
+
                   {/* <Form.Control type="file" multiple name="files"  />*/}
                 </div>
                 <button className="btn btn-primary shadow-2 mb-4" type="submit">

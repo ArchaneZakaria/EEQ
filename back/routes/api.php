@@ -37,5 +37,6 @@ Route::get('/getProjets',[ProjetController::class,'index']);
 Route::get('/getDisciplines',[DisciplineController::class,'index']);
 Route::get('file/piecesjointes',[FileUploadConroller::class,'getpiecesjointes']);
 Route::post('file/PostPiecesjointes',[FileUploadConroller::class,'postpiecesjointes']);
-
+Route::post('/getLabo',[LaboratoireController::class,'getLaboratoire']);
+Route::post('/updateLabo',[LaboratoireController::class,'updateLaboratoire']);
 //Route::apiResource('projet','ProjetController');

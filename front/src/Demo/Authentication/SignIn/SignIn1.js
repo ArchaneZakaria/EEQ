@@ -1,4 +1,5 @@
 import React from "react";
+import { useContext } from 'react';
 import { NavLink } from "react-router-dom";
 
 import "./../../../assets/scss/style.scss";
@@ -11,8 +12,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { Form } from "react-bootstrap";
 import Swal from 'sweetalert2'
+import { AuthContext } from "../../../helpers/AuthContext";
+import {Redirect} from 'react-router-dom'
 
 const SignUp1 = (props) => {
+
+  const { utilisateur,setIdtilisateur } = useContext(AuthContext) 
 
     const schema = yup.object().shape({
         email: yup
@@ -52,11 +57,18 @@ const SignUp1 = (props) => {
         text:   "Connexion réussi",
         type: 'success',
         });
+        console.log(res.data.data);
+        localStorage.setItem("accessToken",res.data.data.token);
+        localStorage.setItem("userLogged",JSON.stringify(res.data.data.user));
+        localStorage.setItem("laboLogged",JSON.stringify(res.data.data.labo));
+        setIdtilisateur(res.data.data.user);
+        props.history.push('/dashboard/default');
     }
       });
 
-      console.log(response);
+      
     });
+    
   };
 
   return (

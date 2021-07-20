@@ -8,14 +8,30 @@ import DEMO from "../../../../../store/constant";
 import Avatar1 from '../../../../../assets/images/user/avatar-1.jpg';
 import Avatar2 from '../../../../../assets/images/user/avatar-2.jpg';
 import Avatar3 from '../../../../../assets/images/user/avatar-3.jpg';
+import {AuthContext} from '../../../../../helpers/AuthContext';
+import {Redirect} from 'react-router-dom';
 
 class NavRight extends Component {
+    //static contextType =AuthContext;
+    //alert(localStorage.getItem("userLogged"))
     state = {
-        listOpen: false
+        listOpen: false,
+        user:this.context
     };
+    logout=()=>{
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("userLogged");
+        return <Redirect to="/auth/signin-1"/>
+    }
 
+    profile=()=>{
+        //e.preventDefault();
+       // return <Redirect to="/profile-page"/>
+      // this.props.history.push('/profile-page');
+    }
     render() {
-
+        //const user=this.context;
+        //console.log(localStorage.getItem("userLogged"));
         return (
             <Aux>
                 <ul className="navbar-nav ml-auto">
@@ -86,16 +102,17 @@ class NavRight extends Component {
                             </Dropdown.Toggle>
                             <Dropdown.Menu alignRight className="profile-notification">
                                 <div className="pro-head">
-                                    <img src={Avatar1} className="img-radius" alt="User Profile"/>
-                                    <span>John Doe</span>
-                                    <a href={DEMO.BLANK_LINK} className="dud-logout" title="Logout">
+                                    {/*<img src={Avatar1} className="img-radius" alt="User Profile"/> */}
+                                    
+                                    <span onClick={this.profile}>{JSON.parse(localStorage.getItem("userLogged")).name}</span>
+                                    <a href={DEMO.BLANK_LINK} className="dud-logout" title="Déconnexion"  onClick={this.logout}>
                                         <i className="feather icon-log-out"/>
                                     </a>
                                 </div>
                                 <ul className="pro-body">
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> Settings</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-mail"/> My Messages</a></li>
+                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> Paramétres</a></li>
+                                    <li><a onClick={this.profile} href="http://localhost:3000/datta-able/react/default/profile-page" className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
+                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-mail"/> Messages</a></li>
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-lock"/> Lock Screen</a></li>
                                 </ul>
                             </Dropdown.Menu>
@@ -107,5 +124,6 @@ class NavRight extends Component {
         );
     }
 }
+NavRight.contextType=AuthContext;
 
 export default NavRight;

@@ -2,6 +2,9 @@
       Authentication css start
 ==========================  **/
 
+.desc {
+    width: 200px;
+}
 .auth-wrapper {
     position: relative;
     display: flex;
@@ -41,7 +44,7 @@
     
     .auth-content {
         position: relative;
-        width: 490px;
+        width: 690px;
         padding: 15px;
         z-index: 5;
         &.multyform,

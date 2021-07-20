@@ -16,6 +16,8 @@ import './app.scss';
 
 class AdminLayout extends Component {
 
+    
+
     fullScreenExitHandler = () => {
         if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
             this.props.onFullScreenExit();
@@ -35,7 +37,10 @@ class AdminLayout extends Component {
     }
 
     render() {
-
+        if(!localStorage.getItem("accessToken")){
+           // this.props.history.push('/datta-able/react/default/auth/signin-1');
+           return <Redirect to="/auth/signin-1"/>
+        }
         /* full screen exit call */
         document.addEventListener('fullscreenchange', this.fullScreenExitHandler);
         document.addEventListener('webkitfullscreenchange', this.fullScreenExitHandler);

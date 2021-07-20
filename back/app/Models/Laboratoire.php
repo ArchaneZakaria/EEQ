@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Laboratoire extends Model
 {
@@ -33,6 +34,17 @@ class Laboratoire extends Model
         'Uby_Laboratoire',
         'Ddate_Laboratoire',
         'Dby_Laboratoire',
-        'Deleted_Laboratoire'
+        'Deleted_Laboratoire',
+        'Completed_Laboratoire'
     ];
+/*
+
+public function updateLaboratoire($req){
+    User::where('id',$id)->update([])
+        Laboratoire::where('')
+    }
+ */
+
+
+    
 }

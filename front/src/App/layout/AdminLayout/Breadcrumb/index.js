@@ -75,7 +75,7 @@ class Breadcrumb extends Component {
                                         <h5 className="m-b-10">{title}</h5>
                                     </div>
                                     <ul className="breadcrumb">
-                                        <li className="breadcrumb-item">
+                                    <li className="breadcrumb-item">
                                             <Link to="/"><i className="feather icon-home"/></Link>
                                         </li>
                                         {main}
@@ -90,7 +90,7 @@ class Breadcrumb extends Component {
 
         }
 
-        document.title = title + ' | Datta Able Free React + Redux Admin Template';
+        document.title = title + ' | Evaluation externe de qualité';
 
         return (
             <Aux>

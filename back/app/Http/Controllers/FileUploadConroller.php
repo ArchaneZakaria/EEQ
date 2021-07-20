@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\piece_jointe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FileUploadConroller extends Controller
 {
@@ -13,10 +14,43 @@ class FileUploadConroller extends Controller
     }
     
     public function postpiecesjointes(Request $request){
+        /*
         $fileName="user1.pdf";
-        $path=$request->file()->move(public_path("/uploads"),$fileName);
+        $path=$request->file('File')->move(public_path("/uploads"),$fileName);
         $photoURL=url('/'.$fileName);
-        return response()->json(['url'=>$photoURL],200);
+        return response()->json(['url'=>$photoURL],200);*/
+
+        $imagesName = [];
+        $response = [];
+
+        $validator = Validator::make($request->all(),
+            [
+                'images' => 'required',
+                'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            ]
+        );
+
+        if($validator->fails()) {
+            return response()->json(["status" => "failed", "message" => "Validation error", "errors" => $validator->errors()]);
+        }
+        $filename='';
+        if($request->has('images')) {
+            foreach($request->file('images') as $image) {
+                $filename = time().rand(3,20000). '.'.$image->getClientOriginalExtension();
+                $image->move('uploads/', $filename);
+
+                
+            }
+            $response["filename"] = $filename;
+            $response["status"] = "successs";
+            $response["message"] = "Success! image(s) uploaded";
+        }
+
+        else {
+            $response["status"] = "failed";
+            $response["message"] = "Failed! image(s) not uploaded";
+        }
+        return response()->json($response);
     }
     /**
      * Display a listing of the resource.

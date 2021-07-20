@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Laboratoire;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Discipline_Has_Laboratoire;
 
 class LaboratoireController extends Controller
 {
@@ -32,5 +34,53 @@ class LaboratoireController extends Controller
               'message'=>'Labo added succesfully'
         ]);
 
+    }
+
+    public function getLaboratoire(Request $req){
+           $reponse1= Laboratoire::all()->where("User_Laboratoire",$req->id);
+            $users=User::all()->where("id",$req->id);
+            
+            foreach ($reponse1 as $labo) {
+                $rep1=$labo;
+            }
+            $disciplines=Discipline_Has_Laboratoire::all()->where("Laboratoire_Id_Laboratoire",$rep1->Id_Laboratoire);
+            $disc=array();
+            foreach($disciplines as $discipline){
+                    $disc[]=$discipline->Discipline_Id_Discipline;
+            }
+            foreach ($users as $user) {
+                $rep2=$user;
+            }
+           $response = [
+            //'id'=>$req->id,
+            'labo' => $rep1,
+            'user'=>$rep2,
+            'disciplines'=>$disc
+        ];
+           return response($response,200);
+    }
+
+    public function updateLaboratoire(Request $req){
+
+       $UserUpdt= User::where('id',$req->id)->update(['name'=>$req->name,'email'=>$req->email]);
+       $LaboUpdt=Laboratoire::where('User_Laboratoire',$req->id)->update(['Nom_Laboratoire'=>$req->name,'Responsable_Laboratoire'=>$req->responsable_laboratoire,'Num_Tel_Laboratoire'=>$req->num_tel_laboratoire,'Adresse_Laboratoire'=>$req->adresse_laboratoire,'Completed_Laboratoire'=>1]);
+       $reponse1= Laboratoire::all()->where("User_Laboratoire",$req->id);
+       foreach ($reponse1 as $labo) {
+        $rep1=$labo;
+    }
+        if($req->disciplines){
+            foreach ($req->disciplines as $sku) {
+                $labo_has_disc=Discipline_Has_Laboratoire::insertOrIgnore([
+                    'Discipline_Id_Discipline'=>$sku,
+                    'Laboratoire_Id_Laboratoire'=>$rep1->Id_Laboratoire
+                ]);
+            }
+        }
+         
+         
+        
+    
+       $response=['user'=>$UserUpdt];
+       return response($response,200);
     }
 }
