@@ -12,6 +12,13 @@ export default {
                     type: 'item',
                     url: '/dashboard/default',
                     icon: 'feather icon-home',
+                },
+                {
+                    id: 'projets',
+                    title: 'Projets',
+                    type: 'item',
+                    url: '/projets-page',
+                    icon: 'feather icon-calendar',
                 }
             ]
         },

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Projet;
+use App\Models\Laboratoire;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\Discipline_Has_Laboratoire;
 
 class ProjetController extends Controller
 {
@@ -62,5 +65,22 @@ class ProjetController extends Controller
     public function destroy(Projet $projet)
     {
         //
+    }
+
+    public function showProjets(Request $req){
+        $reponse1= Laboratoire::all()->where("User_Laboratoire",$req->id);
+        foreach ($reponse1 as $labo) {
+            $rep1=$labo;
+        }
+        $disciplines=Discipline_Has_Laboratoire::all()->where("Laboratoire_Id_Laboratoire",$rep1->Id_Laboratoire);
+        $disc=array();
+            foreach($disciplines as $discipline){
+                    $disc[]=$discipline->Discipline_Id_Discipline;
+            }
+        $projets=DB::table('projet')->selectRaw('projet.Id_Projet, projet.Intitule_Projet, projet.Annee_Projet, projet.Description_Projet, projet.Etat_Projet')
+        ->join('projet_has_discipline','projet.Id_Projet','=','projet_has_discipline.Projet_Id_Projet')->whereIn('projet_has_discipline.Discipline_Id_Discipline',$disc)
+        ->distinct()->get();
+        $response=['projets'=>$projets,'disciplines'=>$disc];
+       return response($response,200);
     }
 }

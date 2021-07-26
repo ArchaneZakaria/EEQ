@@ -33,6 +33,7 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 
 Route::post('/addProjet',[ProjetController::class,'store']);
 Route::get('/getProjets',[ProjetController::class,'index']);
+Route::post('/getProjetsSpecific',[ProjetController::class,'showProjets']);
 
 Route::get('/getDisciplines',[DisciplineController::class,'index']);
 Route::get('file/piecesjointes',[FileUploadConroller::class,'getpiecesjointes']);

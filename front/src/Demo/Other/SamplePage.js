@@ -8,9 +8,14 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import Select from 'react-select';
+import ChevronRight  from '@material-ui/icons/Check';
 
 function PositioningActionsColumn() {
   const TableCellStyle = { borderRight: "1px solid #e5e5e5" };
+  const tableIcons = {
+    DetailPanel: React.forwardRef((props, ref) => <ChevronRight  {...props} ref={ref} color='action'/>),
+    
+};
   return (
     <MaterialTable
       title="La liste des projets en cours :"
@@ -65,7 +70,7 @@ function PositioningActionsColumn() {
       ]}
       actions={[
         {
-          icon: "edit",
+          icon: tableIcons.DetailPanel,
           tooltip: "Save User",
           onClick: (event, rowData) => alert("You saved " + rowData.name),
         },
@@ -77,6 +82,7 @@ function PositioningActionsColumn() {
           disabled: rowData.birthYear < 2000,
         }),
       ]}
+      icons={tableIcons}
       options={{
         actionsColumnIndex: -1,
       }}

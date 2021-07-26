@@ -30,6 +30,7 @@ const GoogleMap = React.lazy(() => import('./Demo/Maps/GoogleMap/index'));
 const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 const ProfilePage = React.lazy(() => import('./Demo/Profile/ProfilePage'));
+const ProjetsPage = React.lazy(() => import('./Demo/Projets/ProjetsPage'));
 
 
 const routes = [
@@ -47,6 +48,7 @@ const routes = [
     { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
     { path: '/profile-page', exact: true, name: 'Profile Page', component: ProfilePage },
+    { path: '/projets-page', exact: true, name: 'Projets Page', component: ProjetsPage }
 ];
 
 export default routes;
