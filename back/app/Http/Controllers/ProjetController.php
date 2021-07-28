@@ -83,4 +83,14 @@ class ProjetController extends Controller
         $response=['projets'=>$projets,'disciplines'=>$disc];
        return response($response,200);
     }
+
+
+
+    
+    public function getDisciplinesOfProject(Request $req){
+        $disciplines=DB::table('projet_has_discipline')->selectRaw('projet_has_discipline.Projet_Id_Projet, projet_has_discipline.Discipline_Id_Discipline, discipline.Libelle_Discipline')
+        ->join('discipline','projet_has_discipline.Discipline_Id_Discipline','=','discipline.Id_Discipline')->where('projet_has_discipline.Projet_Id_Projet','=',$req->Id_Projet)->distinct()->get();
+        $response=['disciplines'=>$disciplines];
+       return response($response,200);
+    }
 }
