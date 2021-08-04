@@ -37,6 +37,7 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 Route::post('/addProjet',[ProjetController::class,'store']);
 Route::get('/getProjets',[ProjetController::class,'index']);
 Route::post('/getProjetsSpecific',[ProjetController::class,'showProjets']);
+Route::post('/cloturerProjet',[ProjetController::class,'cloturerProjet']);
 Route::post('/getDisciplinesProject',[ProjetController::class,'getDisciplinesOfProject']);
 
 //Disciplines
@@ -57,3 +58,6 @@ Route::post('/participationsOfProject',[ParticipationController::class,'getParti
 Route::post('/participateToProject',[ParticipationController::class,'participateToProject']);
 Route::post('/countOfParticipation',[ParticipationController::class,'countOfParticipation']);
 Route::post('/getParticipationsOfLaboratoire',[ParticipationController::class,'getParticipationsOfLaboratoire']);
+Route::post('/annulerParticipation',[ParticipationController::class,'annulerParticipation']);
+Route::get('/getDemandesParticipations',[ParticipationController::class,'getDemandesParticipations']);
+Route::post('/approuverParticipation',[ParticipationController::class,'approuverParticipation']);

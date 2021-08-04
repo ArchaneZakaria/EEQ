@@ -92,9 +92,10 @@ class NavRight extends Component {
                             </Dropdown.Menu>
                         </Dropdown>
                     </li>
-                    <li className={this.props.rtlLayout ? 'm-r-15' : 'm-l-15'}>
+                    {/* <li className={this.props.rtlLayout ? 'm-r-15' : 'm-l-15'}>
                         <a href={DEMO.BLANK_LINK} className="displayChatbox" onClick={() => {this.setState({listOpen: true});}}><i className="icon feather icon-mail"/></a>
-                    </li>
+                    </li> */}
+                   
                     <li>
                         <Dropdown alignRight={!this.props.rtlLayout} className="drp-user">
                             <Dropdown.Toggle variant={'link'} id="dropdown-basic">
@@ -112,13 +113,15 @@ class NavRight extends Component {
                                 <ul className="pro-body">
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-settings"/> Paramétres</a></li>
                                     <li><a onClick={this.profile} href="http://localhost:3000/datta-able/react/default/profile-page" className="dropdown-item"><i className="feather icon-user"/> Profile</a></li>
-                                    <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-mail"/> Messages</a></li>
+                                    {/*<li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-mail"/> Messages</a></li>
                                     <li><a href={DEMO.BLANK_LINK} className="dropdown-item"><i className="feather icon-lock"/> Lock Screen</a></li>
+                                     */}
                                 </ul>
                             </Dropdown.Menu>
                         </Dropdown>
                     </li>
                 </ul>
+                {/* */}
                 <ChatList listOpen={this.state.listOpen} closed={() => {this.setState({listOpen: false});}} />
             </Aux>
         );

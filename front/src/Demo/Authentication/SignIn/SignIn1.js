@@ -60,7 +60,12 @@ const SignUp1 = (props) => {
         console.log(res.data.data);
         localStorage.setItem("accessToken",res.data.data.token);
         localStorage.setItem("userLogged",JSON.stringify(res.data.data.user));
-        localStorage.setItem("laboLogged",JSON.stringify(res.data.data.labo));
+        if(res.data.data.user.role===2){
+          localStorage.setItem("laboLogged",JSON.stringify(res.data.data.labo));
+        }else{
+          localStorage.setItem("laboLogged",1);
+        }
+        
         setIdtilisateur(res.data.data.user);
         props.history.push('/dashboard/default');
     }

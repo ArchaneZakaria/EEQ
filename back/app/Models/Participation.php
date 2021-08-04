@@ -24,6 +24,7 @@ class Participation extends Model
         'Dby_Participation',
         'Deleted_Participation',
         'Laboratoire_Id_Laboratoire',
-        'Projet_Id_Projet'
+        'Projet_Id_Projet',
+        'Motivation_Participation'
     ];
 }

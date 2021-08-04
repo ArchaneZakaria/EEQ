@@ -49,7 +49,7 @@ $inverse-color: $dark-color;
 $theme-border: #eaeaea;
 
 // header
-$brand-background: #3f4d67;
+$brand-background: #578ae7;
 $header-dark-background: #3f4d67;
 $header-dark-text-color: #fff;
 $header-light-background: #fff;
@@ -57,7 +57,7 @@ $header-light-text-color: #3f4d67;
 
 // Menu
 $menu-caption-color: #14171d;
-$menu-dark-background: #3f4d67;
+$menu-dark-background: #305fb6;
 $menu-dark-text-color: #a9b7d0;
 $menu-light-background: #fff;
 $menu-light-text-color: #3f4d67;
@@ -88,9 +88,9 @@ $layout-6-bg-color:#23b7e5;
 
 
 $theme-font-family: 'Open Sans', sans-serif;
-$theme-font-size: 14px;
+$theme-font-size: smaller;
 $theme-background: #f4f7fa;
-$theme-font-color: #888;
+$theme-font-color: rgb(12, 10, 10);
 $theme-heading-color: #111;
 
 $color-name: c-blue,c-red,c-green,c-yellow,c-purple;

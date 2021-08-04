@@ -44,12 +44,15 @@ class LoginController extends Controller
           //Setting login response 
           $success['token'] = $this->apiToken;
           $success['user'] =  $user;
-          $reponse1= Laboratoire::all()->where("User_Laboratoire",$user->id);
+          if($user->role==2){
+            $reponse1= Laboratoire::all()->where("User_Laboratoire",$user->id);
 
-       foreach ($reponse1 as $labo) {
-        $rep1=$labo;
-    }
-    $success['labo'] =  $rep1->Completed_Laboratoire;
+            foreach ($reponse1 as $labo) {
+             $rep1=$labo;
+         }
+         $success['labo'] =  $rep1->Completed_Laboratoire;
+          }
+          
             return response()->json([
               'status' => 'success',
               'data' => $success
@@ -78,6 +81,7 @@ class LoginController extends Controller
         ]);
         $laboratoire=Laboratoire::create([
             'Nom_Laboratoire'=>$fields['name'],
+            'Email_Laboratoire'=>$fields['email'],
             'Responsable_Laboratoire'=>$request->responsable_laboratoire,
             'Num_Tel_Laboratoire'=>$request->num_tel_laboratoire,
             'Adresse_Laboratoire'=>$request->adresse_laboratoire,
