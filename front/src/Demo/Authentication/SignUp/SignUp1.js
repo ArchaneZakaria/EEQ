@@ -11,6 +11,7 @@ import { useForm  } from "react-hook-form";
 import { Form,  InputGroup } from "react-bootstrap";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Loader from "../../../App/layout/Loader";
 
 const SignUp1 = (props) => {
   {
@@ -102,11 +103,10 @@ const SignUp1 = (props) => {
     e.preventDefault();
     setImage(e.target.files[0]);
   };
-
+  const[loading,setLoading]=React.useState(false)
   const onSubmit = (data) => {
-    alert('dsdhsdd');
-    console.log(data);
-
+    
+    setLoading(true)
     axios.post("http://localhost:8000/api/register", data).then((res) => {
       console.log(res);
       if (res.status === 201) {
@@ -116,6 +116,7 @@ const SignUp1 = (props) => {
           type: "success",
         });
         reset();
+        setLoading(true)
       } else {
         Swal.fire({
           title: "Echec",
@@ -141,6 +142,9 @@ const SignUp1 = (props) => {
         console.log(res);
       }); */
   return (
+    <React.Fragment>{
+      loading && <Loader/>
+    }
     <Aux>
       <Breadcrumb />
       <div className="auth-wrapper ">
@@ -338,6 +342,8 @@ const SignUp1 = (props) => {
         </div>
       </div>
     </Aux>
+    </React.Fragment>
+    
   );
 };
 

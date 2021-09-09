@@ -5,7 +5,10 @@ namespace App\Http\Controllers\API;
 use App\Models\User;
 use App\Models\Laboratoire;
 use Illuminate\Http\Request;
+use App\Mail\ApprouvationMail;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Discipline_Has_Laboratoire;
 
 class LaboratoireController extends Controller
@@ -37,7 +40,8 @@ class LaboratoireController extends Controller
     }
 
     public function getLaboratoire(Request $req){
-           $reponse1= Laboratoire::all()->where("User_Laboratoire",$req->id);
+        if($req->role=="user"){
+            $reponse1= Laboratoire::all()->where("User_Laboratoire",$req->id);
             $users=User::all()->where("id",$req->id);
             
             foreach ($reponse1 as $labo) {
@@ -58,6 +62,30 @@ class LaboratoireController extends Controller
             'disciplines'=>$disc
         ];
            return response($response,200);
+        }else{
+            $reponse1= Laboratoire::all()->where("Id_Laboratoire",$req->Id_Laboratoire);
+            $user=DB::table('users')->selectRaw('users.*')->join('laboratoire','users.id','=','laboratoire.User_Laboratoire')
+            ->where('laboratoire.Id_Laboratoire','=',$req->Id_Laboratoire)
+            ->distinct()->get();
+
+            foreach ($reponse1 as $labo) {
+                $rep1=$labo;
+            }
+            $disciplines=Discipline_Has_Laboratoire::all()->where("Laboratoire_Id_Laboratoire",$req->Id_Laboratoire);
+            $disc=array();
+            foreach($disciplines as $discipline){
+                    $disc[]=$discipline->Discipline_Id_Discipline;
+            }
+            
+           $response = [
+            //'id'=>$req->id,
+            'labo' => $rep1,
+            'user'=>$user,
+            'disciplines'=>$disc
+        ];
+           return response($response,200);
+        }
+           
     }
 
     public function updateLaboratoire(Request $req){
@@ -67,7 +95,7 @@ class LaboratoireController extends Controller
        $reponse1= Laboratoire::all()->where("User_Laboratoire",$req->id);
        foreach ($reponse1 as $labo) {
         $rep1=$labo;
-    }
+            }
         if($req->disciplines){
             foreach ($req->disciplines as $sku) {
                 $labo_has_disc=Discipline_Has_Laboratoire::insertOrIgnore([
@@ -76,11 +104,52 @@ class LaboratoireController extends Controller
                 ]);
             }
         }
-         
-         
-        
-    
        $response=['user'=>$UserUpdt];
        return response($response,200);
     }
+
+    public function showLaboratoires(){
+        $laboratoires=DB::table('laboratoire')->selectRaw('laboratoire.*')->join('users','laboratoire.User_Laboratoire','=','users.id')->where('users.actif','=','1')
+        ->where('laboratoire.Deleted_Laboratoire','=','0')->distinct()->get();
+        $response=['laboratoires'=>$laboratoires];
+       return response($response,200);
+    }
+
+    public function getDisciplinesLaboratoires(Request $req){
+        $disciplines=DB::table('laboratoire')->selectRaw('discipline.Libelle_Discipline')
+        ->join('discipline_has_laboratoire','laboratoire.Id_Laboratoire','=','discipline_has_laboratoire.Laboratoire_Id_Laboratoire')
+        ->join('discipline','discipline_has_laboratoire.Discipline_Id_Discipline','=','discipline.Id_Discipline')->where('laboratoire.Id_Laboratoire','=',$req->Id_Laboratoire)
+        ->distinct()->get();
+        $response=['disciplines'=>$disciplines];
+       return response($response,200);
+        }
+
+
+        public function countOfParticipations(Request $req){
+            $count=DB::table('laboratoire')->join('participation','laboratoire.Id_Laboratoire','=','participation.Laboratoire_Id_Laboratoire')
+            ->where('laboratoire.Id_Laboratoire','=',$req->Id_Laboratoire)->count('Id_Participation');
+            $response=['count'=>$count];
+                 return response($response,200);
+        }
+
+
+        public function supprimerLaboratoire(Request $req){
+            $UserUpdt= User::where('id',$req->id)->update(['actif'=>'0']);
+            $laboUpdt=Laboratoire::where('Id_Laboratoire',$req->Id_Laboratoire)->update(['Deleted_Laboratoire'=>'1']);
+            return response('Deleted succesfelly',200);
+        }
+
+        public function showDemandeInscription(){
+            $laboratoires=DB::table('laboratoire')->selectRaw('laboratoire.*')->join('users','laboratoire.User_Laboratoire','=','users.id')->where('users.actif','=','0')
+            ->where('laboratoire.Deleted_Laboratoire','=','0')->distinct()->get();
+            $response=['laboratoires'=>$laboratoires];
+       return response($response,200);
+        }
+
+
+        public function approuverInscription(Request $req){
+            $UserUpdt= User::where('id',$req->id)->update(['actif'=>'1']);
+            Mail::to($req->Email_Laboratoire)->send(new ApprouvationMail($req->Nom_Laboratoire,"EEQ",'approuvée'));
+            return response('Laboratoire approuvé',200);
+        }
 }

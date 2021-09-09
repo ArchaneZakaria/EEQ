@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Discipline;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DisciplineController extends Controller
 {
@@ -15,7 +16,7 @@ class DisciplineController extends Controller
     public function index()
     {
         //
-       return Discipline::where('Deleted_Discipline',0)->get();
+       return Discipline::all()->where('Deleted_Discipline',0);
     }
 
     /**
@@ -82,5 +83,21 @@ class DisciplineController extends Controller
     public function destroy(Discipline $discipline)
     {
         //
+    }
+
+
+    public function getDisciplineOfForm(){
+        $discipline=DB::table('discipline')->selectRaw('discipline.Id_Discipline,discipline.Libelle_Discipline')->whereNotIn('discipline.Id_Discipline',DB::table('formulaire')->select('Discipline_Id_Discipline'))->distinct()->get();
+        $response=['discipline'=>$discipline];
+        return response($response,200);
+    }
+
+    public function getLaboOfDiscipline(Request $req){
+        $laboratoires=DB::table('discipline')->selectRaw('laboratoire.Nom_Laboratoire')
+        ->join('discipline_has_laboratoire','discipline.Id_Discipline','=','discipline_has_laboratoire.Discipline_Id_Discipline')
+        ->join('laboratoire','discipline_has_laboratoire.Laboratoire_Id_Laboratoire','=','laboratoire.Id_Laboratoire')
+        ->where('discipline.Id_Discipline','=',$req->Id_Discipline)->distinct()->get();
+        $response=['laboratoires'=>$laboratoires];
+        return response($response,200);
     }
 }

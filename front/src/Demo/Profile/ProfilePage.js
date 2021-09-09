@@ -109,6 +109,7 @@ const NewProject = (props) => {
   React.useLayoutEffect(() => {
     let data = new FormData();
     data.append("id", user.id);
+    data.append("role","user")
     axios.post("http://localhost:8000/api/getLabo", data).then((res) => {
       //console.log(res.data);
       setValue("name", res.data.labo.Nom_Laboratoire);

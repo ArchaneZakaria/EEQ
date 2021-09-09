@@ -7,7 +7,9 @@ use App\Http\Controllers\ProjetController;
 use App\Http\Controllers\DisciplineController;
 use App\Http\Controllers\API\LaboratoireController;
 use App\Http\Controllers\FileUploadConroller;
+use App\Http\Controllers\FormulaireController;
 use App\Http\Controllers\ParticipationController;
+use App\Http\Controllers\QuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +44,8 @@ Route::post('/getDisciplinesProject',[ProjetController::class,'getDisciplinesOfP
 
 //Disciplines
 Route::get('/getDisciplines',[DisciplineController::class,'index']);
+Route::post('/getLaboOfDiscipline',[DisciplineController::class,'getLaboOfDiscipline']);
+Route::get('/getDisciplineOfForm',[DisciplineController::class,'getDisciplineOfForm']);
 
 //Piéces jointes
 Route::get('file/piecesjointes',[FileUploadConroller::class,'getpiecesjointes']);
@@ -50,6 +54,12 @@ Route::post('file/PostPiecesjointes',[FileUploadConroller::class,'postpiecesjoin
 //Laboratoires
 Route::post('/getLabo',[LaboratoireController::class,'getLaboratoire']);
 Route::post('/updateLabo',[LaboratoireController::class,'updateLaboratoire']);
+Route::get('/showLaboratoires',[LaboratoireController::class,'showLaboratoires']);
+Route::post('/getDisciplinesLaboratoires',[LaboratoireController::class,'getDisciplinesLaboratoires']);
+Route::post('/countOfParticipations',[LaboratoireController::class,'countOfParticipations']);
+Route::post('/supprimerLaboratoire',[LaboratoireController::class,'supprimerLaboratoire']);
+Route::get('/showDemandeInscription',[LaboratoireController::class,'showDemandeInscription']);
+Route::post('/approuverInscription',[LaboratoireController::class,'approuverInscription']);
 //Route::apiResource('projet','ProjetController');
 
 
@@ -61,3 +71,11 @@ Route::post('/getParticipationsOfLaboratoire',[ParticipationController::class,'g
 Route::post('/annulerParticipation',[ParticipationController::class,'annulerParticipation']);
 Route::get('/getDemandesParticipations',[ParticipationController::class,'getDemandesParticipations']);
 Route::post('/approuverParticipation',[ParticipationController::class,'approuverParticipation']);
+
+
+//Formulaires
+
+Route::post('/addForm',[FormulaireController::class,'store']);
+
+//question
+Route::post('/addQuestion',[QuestionController::class,'store']);

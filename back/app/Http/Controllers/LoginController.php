@@ -77,7 +77,8 @@ class LoginController extends Controller
             'name' => $fields['name'],
             'email' => $fields['email'],
             'password' => bcrypt($fields['password']),
-            'actif'=>0
+            'actif'=>0,
+            'role'=>2
         ]);
         $laboratoire=Laboratoire::create([
             'Nom_Laboratoire'=>$fields['name'],
@@ -85,7 +86,9 @@ class LoginController extends Controller
             'Responsable_Laboratoire'=>$request->responsable_laboratoire,
             'Num_Tel_Laboratoire'=>$request->num_tel_laboratoire,
             'Adresse_Laboratoire'=>$request->adresse_laboratoire,
-            'User_Laboratoire'=>$user->id
+            'User_Laboratoire'=>$user->id,
+            'Deleted_Laboratoire'=>'0',
+            'Completed_Laboratoire'=>'0'
         ]);
         /*
         foreach ($request->disciplines as $sku) {

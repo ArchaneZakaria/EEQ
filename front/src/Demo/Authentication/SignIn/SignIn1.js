@@ -14,11 +14,11 @@ import { Form } from "react-bootstrap";
 import Swal from 'sweetalert2'
 import { AuthContext } from "../../../helpers/AuthContext";
 import {Redirect} from 'react-router-dom'
-
+import Loader from "../../../App/layout/Loader";
 const SignUp1 = (props) => {
 
   const { utilisateur,setIdtilisateur } = useContext(AuthContext) 
-
+  const[loading,setLoading]=React.useState(false)
     const schema = yup.object().shape({
         email: yup
           .string()
@@ -38,7 +38,7 @@ const SignUp1 = (props) => {
         return <Form.Text className="text-danger mb-1" color="danger" style={{color:"red"}}>{error}</Form.Text>;
       };
   const init = (data) => {
-    
+    setLoading(true)
     axios.get("http://localhost:8000/sanctum/csrf-cookie").then((response) => {
       axios.post("http://localhost:8000/api/login",data).then((res) => {
         if(res["data"]["status"] === "error")
@@ -69,6 +69,7 @@ const SignUp1 = (props) => {
         setIdtilisateur(res.data.data.user);
         props.history.push('/dashboard/default');
     }
+    setLoading(false)
       });
 
       
@@ -77,6 +78,10 @@ const SignUp1 = (props) => {
   };
 
   return (
+    <React.Fragment>
+      {
+      loading && <Loader/>
+    }
     <Aux>
       <Breadcrumb />
       <div className="auth-wrapper">
@@ -142,6 +147,8 @@ const SignUp1 = (props) => {
         </div>
       </div>
     </Aux>
+    </React.Fragment>
+    
   );
 };
 

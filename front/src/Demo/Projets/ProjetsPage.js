@@ -90,6 +90,7 @@ const LaboratoiresParticipants = (props) => {
         // console.log(props.row.Id_Projet);
       });
   }, [props.isOpenParticipants]);
+  
   const [loadMsg,setLoadMsg]=React.useState("Chargement des données...")
   const [dataTab, setData] = React.useState([]);
   const fermer = () => {
@@ -687,7 +688,7 @@ const refresh=()=>{
             {
               title: "Etat du projet",
               field: "Etat_Projet",
-              lookup: { E: "En cours", V: "Validé", C: "Cloturé" },
+              lookup: { E: "Ouvert", V: "Validé", C: "Cloturé" },
               cellStyle: TableCellStyle,
               headerStyle: TableCellStyle,
             },
@@ -743,11 +744,17 @@ const refresh=()=>{
           actions={actions}
           icons={tableIcons}
           options={{
+            exportButton: true,
             actionsColumnIndex: -1,
             headerStyle: {
               backgroundColor: "#5d6d7e",
               color: "#FFF",
             },
+            rowStyle:rowData=>{
+              if(rowData.Etat_Projet==='C'){
+                return {color:"#FF0000"}
+              }
+            }
           }}
         />
         <DiscplinesConcernees
@@ -881,6 +888,7 @@ function Participations(props) {
     if (user.role === 2) {
       let data = new FormData();
       data.append("Id_Laboratoire", user.id);
+      data.append("role","user")
       axios
         .post("http://localhost:8000/api/getParticipationsOfLaboratoire", data)
         .then((res) => {
@@ -1003,6 +1011,7 @@ function Participations(props) {
 }
 
 function CreerProjet(props) {
+  const[loading,setLoading]=React.useState(false)
   const [optionss, setOptions] = React.useState([
     { value: "biologie", label: "biologie" },
     { value: "bactérologie", label: "bactérologie" },
@@ -1049,8 +1058,10 @@ function CreerProjet(props) {
     resolver: yupResolver(schema),
   });
   const onSubmit = (data) => {
+    setLoading(true)
     axios.post("http://localhost:8000/api/addProjet", data).then((res) => {
       if (res.status === 200) {
+        setLoading(false)
         Swal.fire({
           title: "Succés",
           text: "Projet créé.",
@@ -1073,6 +1084,9 @@ function CreerProjet(props) {
   };
   return (
     <React.Fragment>
+      {
+      loading && <Loader/>
+    }
       <h4>Créer un nouveau projet</h4>
       <Form>
         <Form.Group controlId="formBasicEmail">

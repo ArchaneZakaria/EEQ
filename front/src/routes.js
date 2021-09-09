@@ -31,6 +31,8 @@ const OtherSamplePage = React.lazy(() => import('./Demo/Other/SamplePage'));
 const OtherDocs = React.lazy(() => import('./Demo/Other/Docs'));
 const ProfilePage = React.lazy(() => import('./Demo/Profile/ProfilePage'));
 const ProjetsPage = React.lazy(() => import('./Demo/Projets/ProjetsPage'));
+const LaboratoiresPage = React.lazy(() => import('./Demo/Laboratoires/LaboratoiresPage'));
+const DisciplinesPage = React.lazy(() => import('./Demo/Disciplines/DisciplinesPage'));
 
 
 const routes = [
@@ -48,7 +50,9 @@ const routes = [
     { path: '/sample-page', exact: true, name: 'Sample Page', component: OtherSamplePage },
     { path: '/docs', exact: true, name: 'Documentation', component: OtherDocs },
     { path: '/profile-page', exact: true, name: 'Profile Page', component: ProfilePage },
-    { path: '/projets-page', exact: true, name: 'Projets Page', component: ProjetsPage }
+    { path: '/projets-page', exact: true, name: 'Projets Page', component: ProjetsPage },
+    { path: '/laboratoires-page', exact: true, name: 'Laboratoires Page', component: LaboratoiresPage },
+    { path: '/disciplines-page', exact: true, name: 'Disciplines Page', component: DisciplinesPage },
 ];
 
 export default routes;
