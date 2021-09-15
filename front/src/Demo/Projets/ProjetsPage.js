@@ -632,20 +632,21 @@ const refresh=()=>{
   };
   React.useEffect(() => {
     fetchProjets();
-    if (user.role === 2) {
-      labo();
-    } else {
+    if (user.role === 1) {
       admin();
+      
+    } else {
+      labo();
     }
   }, []);
 
   React.useEffect(() => {
-    //alert('jdjsjdsjsjsjsj')
     fetchProjets();
-    if (user.role === 2) {
-      labo();
-    } else {
+    if (user.role === 1) {
       admin();
+      
+    } else {
+      labo();
     }
   }, isFresh);
 

@@ -76,6 +76,7 @@ Route::post('/approuverParticipation',[ParticipationController::class,'approuver
 //Formulaires
 
 Route::post('/addForm',[FormulaireController::class,'store']);
+Route::post('/getFormOfDiscipline',[FormulaireController::class,'getFormOfDiscipline']);
 
 //question
 Route::post('/addQuestion',[QuestionController::class,'store']);

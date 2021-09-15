@@ -49,17 +49,22 @@ class QuestionController extends Controller
         $NewQuestion->Enonce_Question=$request->Enonce_Question;
         $NewQuestion->Description_Question=$request->Description_Question;
         $NewQuestion->Type_Question=$request->Type_Question;
-        $NewQuestion->Required_Question=$request->Required_Question;
+        if($request->Required_Question==true){
+            $NewQuestion->Required_Question=1;
+        }else{
+            $NewQuestion->Required_Question=0;
+        }
+        
         $NewQuestion->Deleted_Question=0;
         $NewQuestion->Formulaire_Id_Formulaire=$Formulaire[0]->Id_Formulaire;
         $NewQuestion->save();
-        
+        $idQst=DB::getPdo()->lastInsertId();
         if($request->Options){
             foreach ($request->Options as $key ) {
                 $NewOption=new Option();
-                $NewOption->Libelle_Option=$key->Libelle_Option;
+                $NewOption->Libelle_Option=$key;
                 $NewOption->Deleted_Option=0;
-                $NewOption->Question_Id_Question=DB::getPdo()->lastInsertId();
+                $NewOption->Question_Id_Question=$idQst;
                 $NewOption->save();
             }
         }

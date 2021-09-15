@@ -14,41 +14,152 @@ import Loader from "../../App/layout/Loader";
 import Modal from "react-bootstrap/Modal";
 import Swal from "sweetalert2";
 import UcFirst from "../../App/components/UcFirst";
-import {
-    OverlayTrigger,
-    Tooltip,
-} from 'react-bootstrap';
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
+const FormulaireOfDiscipline = (props) => {
+  const [loading, setLoading] = React.useState(false);
+  let questions;
+  React.useLayoutEffect(() => {
+    if (props.isOpenForm) {
+      setLoading(true);
+      let data = new FormData();
+      data.append("Id_Discipline", props.row.Id_Discipline);
+      axios
+        .post("http://localhost:8000/api/getFormOfDiscipline", data)
+        .then((res) => {
+          setLoading(true);
+          questions = res.data.questions;
 
+          let questionsDiv = document.getElementById("questions");
+          const keys = Object.keys(questions);
+          keys.forEach((key, index) => {
+            //console.log(`${key}: ${questions[key]["Enonce_Question"]}`);
+            if (questions[key]["Type_Question"] == 1) {
+              let label = document.createElement("LABEL");
+              label.textContent = questions[key]["Enonce_Question"];
+              label.setAttribute("class", "font-weight-bold");
+              let newQst = document.createElement("INPUT");
 
+              newQst.setAttribute("type", "text");
+              newQst.setAttribute("class", "opt form-control");
+              newQst.setAttribute("id", questions[key]["Id_Question"]);
+              questionsDiv.appendChild(label);
+              questionsDiv.appendChild(newQst);
+            } else if (questions[key]["Type_Question"] == 3) {
+              //console.log(questions[key]["options"]);
+              const keysOfOptions = Object.keys(questions[key]["options"]);
+              let label = document.createElement("LABEL");
+              label.setAttribute("class", "font-weight-bold");
+              label.textContent = questions[key]["Enonce_Question"];
+              questionsDiv.appendChild(label);
+              questionsDiv.appendChild(document.createElement("BR"));
+              keysOfOptions.forEach((key1, index) => {
+                let radioInput = document.createElement("input");
+                radioInput.setAttribute("type", "radio");
+                radioInput.setAttribute("name", questions[key]["Id_Question"]);
+                radioInput.text = questions[key]["options"][key1]["Id_Option"];
+                //console.log(radioInput);
+                questionsDiv.appendChild(radioInput);
+                let label = document.createElement("LABEL");
+                label.textContent =
+                  questions[key]["options"][key1]["Libelle_Option"];
+                questionsDiv.appendChild(label);
+                questionsDiv.appendChild(document.createElement("BR"));
+              });
+            } else {
+              const keysOfOptions = Object.keys(questions[key]["options"]);
+              let label = document.createElement("LABEL");
+              label.textContent = questions[key]["Enonce_Question"];
+              label.setAttribute("class", "font-weight-bold");
+              questionsDiv.appendChild(label);
+              keysOfOptions.forEach((key1, index) => {
+                let radioCheck = document.createElement("input");
+                radioCheck.setAttribute("type", "checkbox");
 
+                radioCheck.value = questions[key]["options"][key1]["Id_Option"];
+                questionsDiv.appendChild(radioCheck);
+                let label = document.createElement("LABEL");
+                label.textContent =
+                  questions[key]["options"][key1]["Libelle_Option"];
+                questionsDiv.appendChild(label);
+                questionsDiv.appendChild(document.createElement("BR"));
+              });
+            }
+          });
+          setLoading(false);
+        });
+      /*
+        const keys = Object.keys(questions);
+        console.log(keys);
+      keys.forEach((qst) => {
+        if (qst.Type_Question === 1) {
+          let newQst = document.createElement("INPUT");
+          newQst.setAttribute("type", "text");
+          newQst.setAttribute("class", "opt");
+          newQst.setAttribute("placeholder",qst.Enonce_Question );
+          newQst.style.width = "470px";
+          newQst.style.marginTop = "10px";
+          let questions = document.getElementById("questions");
+          questions.appendChild(newQst);
+        }
+      });
+         */
 
+      setLoading(false);
+    }
+  }, [props.isOpenForm]);
 
+  React.useLayoutEffect(() => {}, []);
+
+  const fermer = () => {
+    props.hide();
+  };
+  return (
+    <>
+      {loading && <Loader />}
+
+      <Modal show={props.isOpenForm} onHide={props.hide}>
+        <Modal.Header>
+          <Modal.Title>
+            Formulaire de : {props.row.Libelle_Discipline}
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <div id="questions"></div>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="outline-secondary" onClick={fermer}>
+            <UcFirst text="Fermer" />
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const NouvelleQuestion = (props) => {
   const [loading, setLoading] = React.useState(false);
   const [typeReponse, setTypeReponse] = React.useState();
   const [display, setDisplay] = React.useState("none");
-  const [countOption,setCountOption]=React.useState(0);
-  
+  const [countOption, setCountOption] = React.useState(0);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     //console.log(props.row)
-    setValue("Id_Discipline",props.row.Id_Discipline);
-    setValue("Type_Question",1)
-    setValue("Options",[]);
-    setValue("Required_Question",1);
-  },[props.row])
+    setValue("Id_Discipline", props.row.Id_Discipline);
+    setValue("Type_Question", 1);
+    setValue("Options", []);
+  }, [props.row]);
 
   const schema = yup.object().shape({
-    Enonce_Question: yup
-      .string()
-      .trim()
-      .required("L'enoncé est obligatoire."),
+    Enonce_Question: yup.string().trim().required("L'enoncé est obligatoire."),
     Description_Question: yup
       .string()
       .trim()
-      .required("La description est obligatoire.")
+      .required("La description est obligatoire."),
   });
 
   const {
@@ -59,38 +170,31 @@ const NouvelleQuestion = (props) => {
     reset,
     control,
     setValue,
+    getValues,
   } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const TheOptions=(data)=>{
-if(countOption!=0){
-      let opti=[];
-    var opt = document.getElementsByClassName("opt");
-    for (let index = 0; index < countOption; index++) {
-      opti[index]=opt[index].value;
-      
+  const TheOptions = () => {};
+  ///hna fin hbest
+  const onSubmit = (data) => {
+    setLoading(true);
+    if (countOption != 0) {
+      let opti = [];
+      var opt = document.getElementsByClassName("opt");
+      for (let index = 0; index < countOption; index++) {
+        opti[index] = opt[index].value;
+      }
+
+      setValue("Options", opti);
     }
-    
-    alert(JSON.stringify(opti));
-    setValue("Options",opti);
-    alert(JSON.stringify(data));
-    }
-  }
-///hna fin hbest 
-  const onSubmit=(data)=>{
-    //alert(JSON.stringify(data));
-    
-    TheOptions(data)
-    alert(JSON.stringify(data));
-    /*
-    setLoading(true)
-    
-      axios
-      .post("http://localhost:8000/api/addQuestion", data)
+    //console.log(getValues());
+
+    axios
+      .post("http://localhost:8000/api/addQuestion", getValues())
       .then((res) => {
         //console.log(res);
-        setLoading(false)
+        setLoading(false);
         if (res.status === 200) {
           Swal.fire({
             title: "Succés",
@@ -107,24 +211,19 @@ if(countOption!=0){
           });
         }
       });
-     */
-    
-    
-    
-  }
-
+  };
 
   const fermer = () => {
     props.hide();
-    setCountOption(0)
-    setTypeReponse(1)
-    setDisplay("none")
-    reset()
+    setCountOption(0);
+    setTypeReponse(1);
+    setDisplay("none");
+    reset();
   };
 
   const changeReponse = (e) => {
     e.preventDefault();
-    setValue("Type_Question",e.target.value);
+    setValue("Type_Question", e.target.value);
     setTypeReponse(e.target.value);
     //console.log(e.target.value);
     if (e.target.value == 1) {
@@ -134,18 +233,18 @@ if(countOption!=0){
     }
   };
 
-  const newOption=()=>{
-    setCountOption(countOption+1);
-    let count=countOption+1;
-    let newOption=document.createElement("INPUT");
-    newOption.setAttribute("type","text");
-    newOption.setAttribute("class","opt");
-    newOption.setAttribute("placeholder","option "+count);
-    newOption.style.width="470px";
-    newOption.style.marginTop="10px";
-    let options=document.getElementById("options");
-    options.appendChild(newOption)
-  }
+  const newOption = () => {
+    setCountOption(countOption + 1);
+    let count = countOption + 1;
+    let newOption = document.createElement("INPUT");
+    newOption.setAttribute("type", "text");
+    newOption.setAttribute("class", "opt form-control");
+    newOption.setAttribute("placeholder", "option " + count);
+    newOption.style.width = "470px";
+    newOption.style.marginTop = "10px";
+    let options = document.getElementById("options");
+    options.appendChild(newOption);
+  };
 
   return (
     <>
@@ -159,9 +258,13 @@ if(countOption!=0){
           <Form>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Enoncé</Form.Label>
-              <Form.Control type="text" {...register("Enonce_Question")}/>
+              <Form.Control
+                as="textarea"
+                rows="3"
+                {...register("Enonce_Question")}
+              />
               {formState.errors.Enonce_Question &&
-            errorMessage(formState.errors.Enonce_Question.message)}
+                errorMessage(formState.errors.Enonce_Question.message)}
             </Form.Group>
             <Form.Group controlId="exampleForm.ControlSelect1">
               <Form.Label>Type de réponse</Form.Label>
@@ -183,20 +286,39 @@ if(countOption!=0){
                 <UcFirst text={"+"} />
               </Button>
             </OverlayTrigger>
-            <div id={"options"}>
-            </div>
+            <div id={"options"}></div>
             <Form.Group controlId="formBasicEmail">
               <Form.Label>Description</Form.Label>
-              <Form.Control as="textarea" rows="3" {...register("Description_Question")} />
+              <Form.Control
+                as="textarea"
+                rows="3"
+                {...register("Description_Question")}
+              />
               {formState.errors.Description_Question &&
-            errorMessage(formState.errors.Description_Question.message)}
+                errorMessage(formState.errors.Description_Question.message)}
+            </Form.Group>
+            <Form.Group controlId="formBasicChecbox">
+              <Form.Check
+                type="checkbox"
+                label="Obligatoire"
+                {...register("Required_Question")}
+              />
             </Form.Group>
           </Form>
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="outline-primary" type="submit" onClick={handleSubmit(onSubmit)}>
-            <UcFirst text="Oui" />
+          <Button
+            variant="outline-primary"
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+          >
+            <UcFirst
+              text="Oui"
+              onClick={() => {
+                //TheOptions()
+              }}
+            />
           </Button>
           <Button variant="outline-secondary" onClick={fermer}>
             <UcFirst text="Non" />
@@ -358,6 +480,7 @@ const ListeDisciplines = (props) => {
   const [clickedRow, setClickedRow] = React.useState([]);
   const [isOpenLabo, SetIsOpenLabo] = React.useState(false);
   const [isOpenNewQst, SetIsOpenNewQst] = React.useState(false);
+  const [isOpenForm, SetIsOpenForm] = React.useState(false);
   const TableCellStyle = { borderRight: "1px solid #e5e5e5" };
 
   const hideLabo = () => {
@@ -366,6 +489,10 @@ const ListeDisciplines = (props) => {
 
   const hideNewQst = () => {
     SetIsOpenNewQst(false);
+  };
+
+  const hideForm = () => {
+    SetIsOpenForm(false);
   };
 
   const fetchDisciplines = () => {
@@ -474,6 +601,7 @@ const ListeDisciplines = (props) => {
             tooltip: "Formulaire",
             onClick: (event, rowData) => {
               setClickedRow(rowData);
+              SetIsOpenForm(true);
             },
           }),
           (rowData) => ({
@@ -497,6 +625,12 @@ const ListeDisciplines = (props) => {
         row={clickedRow}
         isOpenNewQst={isOpenNewQst}
         hide={hideNewQst}
+      />
+
+      <FormulaireOfDiscipline
+        row={clickedRow}
+        isOpenForm={isOpenForm}
+        hide={hideForm}
       />
     </React.Fragment>
   );
