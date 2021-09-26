@@ -41,11 +41,14 @@ Route::get('/getProjets',[ProjetController::class,'index']);
 Route::post('/getProjetsSpecific',[ProjetController::class,'showProjets']);
 Route::post('/cloturerProjet',[ProjetController::class,'cloturerProjet']);
 Route::post('/getDisciplinesProject',[ProjetController::class,'getDisciplinesOfProject']);
+Route::get('/getCountOfProjects',[ProjetController::class,'getCountOfProjects']);
 
 //Disciplines
 Route::get('/getDisciplines',[DisciplineController::class,'index']);
 Route::post('/getLaboOfDiscipline',[DisciplineController::class,'getLaboOfDiscipline']);
 Route::get('/getDisciplineOfForm',[DisciplineController::class,'getDisciplineOfForm']);
+Route::get('/getCountOfDisciplines',[DisciplineController::class,'getCountOfDisciplines']);
+Route::get('/getStatsOfDisciplines',[DisciplineController::class,'getStatsOfDisciplines']);
 
 //Piéces jointes
 Route::get('file/piecesjointes',[FileUploadConroller::class,'getpiecesjointes']);
@@ -60,6 +63,8 @@ Route::post('/countOfParticipations',[LaboratoireController::class,'countOfParti
 Route::post('/supprimerLaboratoire',[LaboratoireController::class,'supprimerLaboratoire']);
 Route::get('/showDemandeInscription',[LaboratoireController::class,'showDemandeInscription']);
 Route::post('/approuverInscription',[LaboratoireController::class,'approuverInscription']);
+Route::get('/getCountOfLaboratoires',[LaboratoireController::class,'getCountOfLaboratoires']);
+
 //Route::apiResource('projet','ProjetController');
 
 
@@ -68,6 +73,7 @@ Route::post('/participationsOfProject',[ParticipationController::class,'getParti
 Route::post('/participateToProject',[ParticipationController::class,'participateToProject']);
 Route::post('/countOfParticipation',[ParticipationController::class,'countOfParticipation']);
 Route::post('/getParticipationsOfLaboratoire',[ParticipationController::class,'getParticipationsOfLaboratoire']);
+Route::post('/getParticipationsValidesOfLaboratoire',[ParticipationController::class,'getParticipationsValidesOfLaboratoire']);
 Route::post('/annulerParticipation',[ParticipationController::class,'annulerParticipation']);
 Route::get('/getDemandesParticipations',[ParticipationController::class,'getDemandesParticipations']);
 Route::post('/approuverParticipation',[ParticipationController::class,'approuverParticipation']);
@@ -77,6 +83,10 @@ Route::post('/approuverParticipation',[ParticipationController::class,'approuver
 
 Route::post('/addForm',[FormulaireController::class,'store']);
 Route::post('/getFormOfDiscipline',[FormulaireController::class,'getFormOfDiscipline']);
+Route::post('/getFormOfProject',[FormulaireController::class,'getFormOfProject']);
+Route::post('/submitFormulaire',[FormulaireController::class,'submitFormulaire']);
+Route::post('/getReponseOfParticipation',[FormulaireController::class,'getReponseOfParticipation']);
+Route::post('/evaluationOfReponse',[FormulaireController::class,'evaluationOfReponse']);
 
 //question
 Route::post('/addQuestion',[QuestionController::class,'store']);

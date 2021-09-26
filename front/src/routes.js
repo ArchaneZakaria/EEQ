@@ -33,6 +33,8 @@ const ProfilePage = React.lazy(() => import('./Demo/Profile/ProfilePage'));
 const ProjetsPage = React.lazy(() => import('./Demo/Projets/ProjetsPage'));
 const LaboratoiresPage = React.lazy(() => import('./Demo/Laboratoires/LaboratoiresPage'));
 const DisciplinesPage = React.lazy(() => import('./Demo/Disciplines/DisciplinesPage'));
+const EnquetesPage = React.lazy(() => import('./Demo/Enquetes/EnquetesPage'));
+
 
 
 const routes = [
@@ -53,6 +55,7 @@ const routes = [
     { path: '/projets-page', exact: true, name: 'Projets Page', component: ProjetsPage },
     { path: '/laboratoires-page', exact: true, name: 'Laboratoires Page', component: LaboratoiresPage },
     { path: '/disciplines-page', exact: true, name: 'Disciplines Page', component: DisciplinesPage },
+    { path: '/enquetes-page', exact: true, name: 'Enquetes Page', component: EnquetesPage },
 ];
 
 export default routes;

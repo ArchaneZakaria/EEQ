@@ -886,7 +886,7 @@ function Participations(props) {
   };
   const fetchParticipations=()=>{
     setLoadMsg("Chargement des données...")
-    if (user.role === 2) {
+    if (user.role != 1) {
       let data = new FormData();
       data.append("Id_Laboratoire", user.id);
       data.append("role","user")
@@ -910,10 +910,19 @@ function Participations(props) {
     }
   }
   React.useEffect(() => {
-    
+    if(user.role != 1){
+      labo()
+    }else{
+      admin()
+    }
     fetchParticipations()
   }, []);
   React.useEffect(() => {
+    if(user.role != 1){
+      labo()
+    }else{
+      admin()
+    }
     fetchParticipations();
   }, [props.fresh, isFresh]);
 
@@ -1180,7 +1189,7 @@ const ProjetsPage = (props) => {
             <Tab eventKey="projets" title="Liste des projets">
               <ListeProjets fresh={isFresh} />
             </Tab>
-            {user.role === 2 && (
+            {user.role !=1 && (
               <Tab eventKey="participations" title="Participations">
                 <Participations fresh={isFresh} />
               </Tab>

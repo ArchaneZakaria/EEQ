@@ -132,4 +132,10 @@ class ProjetController extends Controller
         $response=['ProjetUpdated'=>$ProjetUpdated];
         return response($response,200);
     }
+
+    public function getCountOfProjects(){
+        $projets=DB::table('projet')->where('Deleted_Projet','=','0')->count();
+        $response=['projets'=>$projets];
+       return response($response,200);
+    }
 }

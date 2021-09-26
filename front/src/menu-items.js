@@ -237,18 +237,18 @@ const itemsAdmin=[
                 icon: 'feather icon-list',
             },
             {
-                id: 'formulaires',
-                title: 'Enquétes',
-                type: 'item',
-                url: '/formulaires-page',
-                icon: 'feather icon-clipboard',
-            },
-            {
                 id: 'disciplines',
                 title: 'Disciplines',
                 type: 'item',
                 url: '/disciplines-page',
                 icon: 'feather icon-command',
+            },
+            {
+                id: 'formulaires',
+                title: 'Enquétes',
+                type: 'item',
+                url: '/enquetes-page',
+                icon: 'feather icon-clipboard',
             }
         ]
     }
@@ -273,6 +273,13 @@ const itemsLabo=[
                 type: 'item',
                 url: '/projets-page',
                 icon: 'feather icon-calendar',
+            },
+            {
+                id: 'formulaires',
+                title: 'Enquétes',
+                type: 'item',
+                url: '/enquetes-page',
+                icon: 'feather icon-clipboard',
             }
         ]
     }

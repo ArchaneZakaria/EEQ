@@ -68,6 +68,25 @@ class ParticipationController extends Controller
     }
 
 
+    public function getParticipationsValidesOfLaboratoire(Request $req){
+        if($req->role=="user"){
+            $laboratoire=DB::table('laboratoire')->select('Id_Laboratoire')->where('User_Laboratoire','=',$req->Id_Laboratoire)->get();
+            $participations=DB::table('participation')->selectRaw('participation.* ,projet.* ')->join('projet','participation.Projet_Id_Projet','=','projet.Id_Projet')->where('participation.Laboratoire_Id_Laboratoire','=',$laboratoire[0]->Id_Laboratoire)->where('Etat_Participation','=','v')->where('projet.Deleted_Projet','=','0')->get();
+            return response()->json([
+                'status'=>200,
+                'participations'=>$participations
+          ]);
+        }else{
+            $participations=DB::table('participation')->selectRaw('participation.* ,projet.* ,laboratoire.*')->join('laboratoire','laboratoire.Id_Laboratoire','=','participation.Laboratoire_Id_Laboratoire')->join('projet','participation.Projet_Id_Projet','=','projet.Id_Projet')->where('projet.Deleted_Projet','=','0')->where('participation.Etat_Participation','=','S')->get();
+            return response()->json([
+                'status'=>200,
+                'participations'=>$participations
+          ]);
+        }
+        
+    }
+
+
     public function annulerParticipation(Request $req){
         Participation::where('Id_Participation',$req->Id_Participation)->update(['Etat_Participation'=>'A']);
         $participations=DB::table('participation')->selectRaw('participation.* ,projet.* ,laboratoire.Nom_Laboratoire ,users.email')

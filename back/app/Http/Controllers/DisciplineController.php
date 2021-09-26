@@ -100,4 +100,19 @@ class DisciplineController extends Controller
         $response=['laboratoires'=>$laboratoires];
         return response($response,200);
     }
+
+    public function getCountOfDisciplines(){
+        $disciplines=DB::table('discipline')->where('Deleted_Discipline','=','0')->count();
+        $response=['disciplines'=>$disciplines];
+        return response($response,200);
+    }
+
+    public function getStatsOfDisciplines(){
+        $stats=DB::select("SELECT discipline.Libelle_Discipline,a.counta FROM discipline inner JOIN 
+        (SELECT Discipline_Id_Discipline,COUNT(Discipline_Id_Discipline) 
+        AS 'counta' FROM discipline_has_laboratoire GROUP BY Discipline_Id_Discipline) a ON
+        discipline.Id_Discipline=a.Discipline_Id_Discipline");
+        $response=['stats'=>$stats];
+        return response($response,200);
+    }
 }

@@ -27,7 +27,7 @@ const FormulaireOfDiscipline = (props) => {
       axios
         .post("http://localhost:8000/api/getFormOfDiscipline", data)
         .then((res) => {
-          setLoading(true);
+          //setLoading(true);
           questions = res.data.questions;
 
           let questionsDiv = document.getElementById("questions");
@@ -86,7 +86,7 @@ const FormulaireOfDiscipline = (props) => {
               });
             }
           });
-          setLoading(false);
+         // setLoading(false);
         });
       /*
         const keys = Object.keys(questions);

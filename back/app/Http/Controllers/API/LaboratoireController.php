@@ -152,4 +152,10 @@ class LaboratoireController extends Controller
             Mail::to($req->Email_Laboratoire)->send(new ApprouvationMail($req->Nom_Laboratoire,"EEQ",'approuvée'));
             return response('Laboratoire approuvé',200);
         }
+
+        public function getCountOfLaboratoires(){
+            $labos=DB::table('laboratoire')->selectRaw('laboratoire.*')->where('Completed_Laboratoire','=','1')->where('Deleted_Laboratoire','=','0')->count();
+            $response=['laboratoires'=>$labos];
+       return response($response,200);
+        }
 }

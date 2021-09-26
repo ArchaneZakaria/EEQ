@@ -6,14 +6,45 @@ import MultiBarChart from "../Charts/Nvd3Chart/MultiBarChart";
 import { Redirect } from "react-router-dom";
 import Aux from "../../hoc/_Aux";
 import DEMO from "../../store/constant";
+import axios from "axios";
 
 class Dashboard extends React.Component {
-
   constructor(props) {
     super(props);
-    this.state = { labo: JSON.parse(localStorage.getItem("laboLogged")) };
+    this.state = {
+      labo: JSON.parse(localStorage.getItem("laboLogged")),
+      countLabo: 0,
+      countProjets: 0,
+      countDisciplines:0
+    };
   }
 
+  componentDidMount() {
+    axios
+      .get("http://localhost:8000/api/getCountOfLaboratoires")
+      .then((res) => {
+        this.setState({ countLabo: res.data.laboratoires });
+      });
+    axios.get("http://localhost:8000/api/getCountOfProjects").then((res) => {
+      this.setState({ countProjets: res.data.projets });
+    });
+    axios.get("http://localhost:8000/api/getCountOfDisciplines").then((res) => {
+      this.setState({ countDisciplines: res.data.disciplines });
+    });
+  }
+  componentDidUpdate() {
+    axios
+      .get("http://localhost:8000/api/getCountOfLaboratoires")
+      .then((res) => {
+        this.setState({ countLabo: res.data.laboratoires });
+      });
+    axios.get("http://localhost:8000/api/getCountOfProjects").then((res) => {
+      this.setState({ countProjets: res.data.projets });
+    });
+    axios.get("http://localhost:8000/api/getCountOfDisciplines").then((res) => {
+      this.setState({ countDisciplines: res.data.disciplines });
+    });
+  }
   profile = () => {
     this.props.history.push("/profile-page");
   };
@@ -21,20 +52,22 @@ class Dashboard extends React.Component {
   render() {
     return (
       <Aux>
-        {this.state.labo===0 && <Row>
-          <Col>
-            <div class="container">
-              <div class="alert alert-primary" role="alert">
-                Veuillez compléter votre profil
-                <a href="#" class="alert-link" onClick={this.profile}>
-                  {" "}
-                  Ici.
-                </a>
+        {this.state.labo === 0 && (
+          <Row>
+            <Col>
+              <div class="container">
+                <div class="alert alert-primary" role="alert">
+                  Veuillez compléter votre profil
+                  <a href="#" class="alert-link" onClick={this.profile}>
+                    {" "}
+                    Ici.
+                  </a>
+                </div>
               </div>
-            </div>
-          </Col>
-        </Row>}
-        
+            </Col>
+          </Row>
+        )}
+
         <Row>
           <Col md={6} xl={4}>
             <Card>
@@ -43,7 +76,8 @@ class Dashboard extends React.Component {
                 <div className="row d-flex align-items-center">
                   <div className="col-9">
                     <h2 className="mt-2 f-w-300">
-                      800<sub className="text-muted f-14">Participants</sub>
+                      {this.state.countLabo}
+                      <sub className="text-muted f-14">Participants</sub>
                     </h2>
                   </div>
                 </div>
@@ -57,7 +91,8 @@ class Dashboard extends React.Component {
                 <div className="row d-flex align-items-center">
                   <div className="col-9">
                     <h2 className="mt-2 f-w-300">
-                      500<sub className="text-muted f-14">Projets</sub>
+                      {this.state.countProjets}
+                      <sub className="text-muted f-14">Projets</sub>
                     </h2>
                   </div>
                 </div>
@@ -69,16 +104,17 @@ class Dashboard extends React.Component {
             <Card>
               <Card.Body>
                 <h6 className="mb-4">
-                  Moyenne De Participation Des Laboratoires
+                  Nombre de disciplines
                 </h6>
                 <div className="row d-flex align-items-center">
                   <div className="col-9">
-                    <h3 className="f-w-300 d-flex align-items-center m-b-0">
-                      <i className="feather icon-arrow-up text-c-green f-30 m-r-5" />
-                      70%
-                    </h3>
+                    <h2 className="mt-2 f-w-300">
+                      {this.state.countDisciplines}
+                      <sub className="text-muted f-14">disciplines</sub>
+                    </h2>
                   </div>
                 </div>
+                {/*
                 <div className="progress m-t-30" style={{ height: "7px" }}>
                   <div
                     className="progress-bar progress-c-theme"
@@ -88,7 +124,8 @@ class Dashboard extends React.Component {
                     aria-valuemin="0"
                     aria-valuemax="100"
                   />
-                </div>
+                </div> */}
+                
               </Card.Body>
             </Card>
           </Col>
